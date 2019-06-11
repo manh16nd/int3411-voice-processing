@@ -85,6 +85,7 @@ function createDownloadLink(blob) {
     var au = document.createElement('audio')
     var li = document.createElement('li')
     var link = document.createElement('a')
+    var sub = document.createElement('span')
     var formData = new FormData()
     var result = ''
     formData.append('file', blob)
@@ -96,17 +97,21 @@ function createDownloadLink(blob) {
 
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
-            result = request.response
+            result = JSON.parse(request.response) 
+            var text = result.text
+            var subject = result.subject
             //add controls to the <audio> element 
             au.controls = true
             au.src = url
             //link the a element to the blob 
             link.href = url
             link.download = new Date().toISOString() + '.wav'
-            link.innerHTML = result
+            link.innerHTML = text
+            sub.innerHTML = `Chủ đề: ${subject}`
             //add the new audio and a elements to the li element 
             li.appendChild(au)
             li.appendChild(link)
+            li.appendChild(sub)
             //add the li element to the ordered list 
             recordingsList.appendChild(li)
         }
