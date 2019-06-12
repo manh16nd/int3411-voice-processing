@@ -95,9 +95,13 @@ function createDownloadLink(blob) {
     request.open("POST", "/upload")
     request.send(formData)
 
+    const spinner = document.getElementById('spinner')
+    spinner.style.display = 'block'
+
     request.onreadystatechange = function () {
         if (request.readyState === 4) {
-            result = JSON.parse(request.response) 
+            spinner.style.display = 'none'
+            result = JSON.parse(request.response)
             var text = result.text
             var subject = result.subject
             //add controls to the <audio> element 
