@@ -4,6 +4,11 @@ import glob
 from pydub import AudioSegment
 import wave
 import numpy as np
+import numpy
+import scipy.io.wavfile
+from scipy.fftpack import dct
+
+from reduce_noise import remove_noise
 
 r = sr.Recognizer()
 
@@ -30,12 +35,13 @@ def trim():
 
 
 def recognition(filename):
-	trim()
-	
-	for file in glob.glob("upload/trim"):
-		wav_file = sr.AudioFile(file)
-		with wav_file as source:
-			audio = r.record(source)
-			text = r.recognize_google(audio, language="vi-VN")
-			subject = classify(text)
-			return {'text': text, 'subject': subject}
+    trim()
+    remove_noise()
+
+    for file in glob.glob("upload/remove_noise.wav"):
+        wav_file = sr.AudioFile(file)
+        with wav_file as source:
+            audio = r.record(source)
+            text = r.recognize_google(audio, language="vi-VN")
+            subject = classify(text)
+            return {'text': text, 'subject': subject}
